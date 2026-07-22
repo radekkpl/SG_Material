@@ -7,6 +7,7 @@ using ReaLTaiizor.Util;
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static ReaLTaiizor.Helper.MaterialDrawHelper;
 
@@ -22,6 +23,25 @@ namespace ReaLTaiizor.Child.Material
         #region "Public Properties"
 
         //Properties for managing the material design properties
+        private Regex _inputRegex;
+        [Category("Behavior")]
+        [DefaultValue("")]
+        public string InputRegex
+        {
+            get => _inputRegex?.ToString() ?? "";
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    _inputRegex = null;
+                }
+                else
+                {
+                    _inputRegex = new Regex(value, RegexOptions.Compiled);
+                }
+            }
+        }
+
         [Browsable(false)]
         public int Depth { get; set; }
 
@@ -73,7 +93,8 @@ namespace ReaLTaiizor.Child.Material
         private const uint WM_USER = 0x0400;
         private const uint EM_SETBKGNDCOLOR = WM_USER + 67;
         private const uint WM_KILLFOCUS = 0x0008;
-
+        private const int WM_CHAR = 0x0102;
+        private const int WM_PASTE = 0x0302;
 
         private float? _scaleRatio; // Cache
         private float ScaleFactor
@@ -103,8 +124,44 @@ namespace ReaLTaiizor.Child.Material
 
             set => _scaleRatioSqrt = value;
         }
+        private bool IsInputValid(ref Message m)
+        {
+            if (m.Msg == WM_CHAR && _inputRegex != null)
+            {
+                char c = (char)m.WParam;
+
+                if (!char.IsControl(c))
+                {
+                    string newText =
+                        Text.Remove(SelectionStart, SelectionLength)
+                            .Insert(SelectionStart, c.ToString());
+
+                    if (!_inputRegex.IsMatch(newText))
+                    {
+                        return false;
+                    }
+                }
+            }
+            if (m.Msg == WM_PASTE && _inputRegex != null)
+            {
+                string paste = Clipboard.GetText();
+
+                string newText =
+                    Text.Remove(SelectionStart, SelectionLength)
+                        .Insert(SelectionStart, paste);
+
+                if (!_inputRegex.IsMatch(newText))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         protected override void WndProc(ref Message m)
         {
+            if (!IsInputValid(ref m))
+                return;
+
             ScaleFactor = SkinManager.GetDeviceScaleFactor(this);
             ScaleFactorSqrt = SkinManager.GetDeviceScaleFactorSqrt(this);
 

@@ -133,6 +133,8 @@ namespace ReaLTaiizor.Controls
                 Invalidate();
             }
         }
+        [Category("Material"), DefaultValue(""), Localizable(false), Description("Regex keypress / paste validating. Usefull for numeric only input.")]
+        public string InputRegex { get => baseTextBox.InputRegex; set => baseTextBox.InputRegex = value; }
 
         [Category("Material"), DefaultValue(true)]
         public bool UseAccent { get; set; }
