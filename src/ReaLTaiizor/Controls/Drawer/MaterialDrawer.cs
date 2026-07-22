@@ -484,7 +484,8 @@ namespace ReaLTaiizor.Controls
 
             set => _scaleRatioSqrt = value;
         }
-
+       
+        private bool _initialized = false;  //fix open/close initialization
         public MaterialDrawer()
         {
             SetStyle(ControlStyles.DoubleBuffer | ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
@@ -612,7 +613,13 @@ namespace ReaLTaiizor.Controls
             }
             UpdateTabRects();
         }
-
+        public void Initialize()
+        {
+            _initialized = true;
+            _showHideAnimManager.SetProgress(_isOpen ? 0 : 1);
+            showHideAnimation();
+            Invalidate();
+        }
         protected override void OnDpiChangedAfterParent(EventArgs e)
         {
             ScaleFactor = SkinManager.GetDeviceScaleFactor(this);
@@ -624,6 +631,7 @@ namespace ReaLTaiizor.Controls
         {
             // ScaleFactor = SkinManager.GetDeviceScaleFactor(this);
             // ScaleFactorSqrt = SkinManager.GetDeviceScaleFactorSqrt(this);
+            if (!_initialized) return;
             Paint(e);
         }
 
@@ -747,6 +755,12 @@ namespace ReaLTaiizor.Controls
         {
             _isOpen = true;
             DrawerStateChanged?.Invoke(this);
+            if (!_initialized)
+            {
+                _showHideAnimManager.SetProgress(0);
+                showHideAnimation();
+                return;
+            }
             DrawerBeginOpen?.Invoke(this);
             _showHideAnimManager.StartNewAnimation(AnimationDirection.Out);
         }
@@ -755,6 +769,12 @@ namespace ReaLTaiizor.Controls
         {
             _isOpen = false;
             DrawerStateChanged?.Invoke(this);
+            if (!_initialized)
+            {
+                _showHideAnimManager.SetProgress(1);
+                showHideAnimation();
+                return;
+            }
             DrawerBeginClose?.Invoke(this);
             _showHideAnimManager.StartNewAnimation(AnimationDirection.In);
         }

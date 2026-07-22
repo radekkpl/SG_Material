@@ -743,6 +743,9 @@ namespace ReaLTaiizor.Forms
             drawerOverlay.FormClosed += TerminateOnClose;
             drawerForm.FormClosed += TerminateOnClose;
             drawerForm.Attach(drawerControl);
+
+            //FIX for animating drawer when form is created, drawing drawer will start from now
+            drawerControl.Initialize();
         }
 
         private void TerminateOnClose(object sender, FormClosedEventArgs e)
