@@ -728,7 +728,7 @@ namespace ReaLTaiizor.Controls
                         iconsSelectedBrushes[ik].TranslateTransform(dx, 0);
                     }
 
-                    g.FillRectangle(currentTabIndex == ShowTabControl.SelectedIndex ? iconsSelectedBrushes[ik] : iconsBrushes[ik], iconRect);
+                    g.DrawImage(currentTabIndex == ShowTabControl.SelectedIndex ? iconsSelectedBrushes[ik].Image : iconsBrushes[ik].Image, iconRect);
                 }
             }
 
