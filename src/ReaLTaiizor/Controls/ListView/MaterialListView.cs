@@ -129,7 +129,10 @@ namespace ReaLTaiizor.Controls
 
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            g.FillRectangle(new SolidBrush(BackColor), e.Bounds);
+            using (SolidBrush brush = new SolidBrush(BackColor))
+            {
+                g.FillRectangle(brush, e.Bounds);
+            }
 
             // Draw Text
             using MaterialNativeTextRenderer NativeText = new(g);
@@ -163,9 +166,11 @@ namespace ReaLTaiizor.Controls
                 // Hover background
                 g.FillRectangle(SkinManager.BackgroundHoverBrush, e.Bounds);
             }
-
-            // Draw separator line
-            g.DrawLine(new Pen(SkinManager.DividersColor), e.Bounds.Left, e.Bounds.Y, e.Bounds.Right, e.Bounds.Y);
+            using (Pen pen = new Pen(SkinManager.DividersColor)) 
+            {
+                // Draw separator line
+                g.DrawLine(new Pen(SkinManager.DividersColor), e.Bounds.Left, e.Bounds.Y, e.Bounds.Right, e.Bounds.Y);
+            }
 
             int id = 0;
             foreach (ListViewItem.ListViewSubItem subItem in e.Item.SubItems)
@@ -186,7 +191,7 @@ namespace ReaLTaiizor.Controls
                 ++id;
             }
         }
-
+        
         // Resize
         protected override void OnColumnWidthChanging(ColumnWidthChangingEventArgs e)
         {
@@ -194,7 +199,7 @@ namespace ReaLTaiizor.Controls
             ScaleFactorSqrt = SkinManager.GetDeviceScaleFactorSqrt(this);
 
             base.OnColumnWidthChanging(e);
-            AutoResize();
+           // AutoResize();
         }
 
         protected override void OnColumnWidthChanged(ColumnWidthChangedEventArgs e)
@@ -203,7 +208,7 @@ namespace ReaLTaiizor.Controls
             ScaleFactorSqrt = SkinManager.GetDeviceScaleFactorSqrt(this);
 
             base.OnColumnWidthChanged(e);
-            AutoResize();
+            //  AutoResize();
         }
 
         protected override void OnResize(EventArgs e)

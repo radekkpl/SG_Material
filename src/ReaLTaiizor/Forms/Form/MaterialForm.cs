@@ -1082,12 +1082,12 @@ namespace ReaLTaiizor.Forms
             }
         }
 
-        protected override void OnMove(EventArgs e)
-        {
+      //  protected override void OnMove(EventArgs e)
+      //  {
             // Empty Point ensures the screen maximizes to the top left of the current screen
-            MaximizedBounds = new Rectangle(Point.Empty, Screen.GetWorkingArea(Location).Size);
-            base.OnMove(e);
-        }
+         //   MaximizedBounds = new Rectangle(Point.Empty, Screen.GetWorkingArea(Location).Size);
+         //   base.OnMove(e);
+      //  }
 
         protected override void OnMouseDown(MouseEventArgs e)
         {

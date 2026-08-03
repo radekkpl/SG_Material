@@ -106,7 +106,7 @@ namespace ReaLTaiizor.Controls
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
             BackColor = SkinManager.BackdropColor;
-            ForeColor = SkinManager.ColorScheme.TextColor;
+            ForeColor = SkinManager.ColorScheme.AccentColor;
             Size = new(200, 200);
             MinimumSize = new(130, 50);
             Padding = new Padding(5, 28, 5, 5);
@@ -244,7 +244,7 @@ namespace ReaLTaiizor.Controls
             e.Graphics.TranslateTransform(x, y);
             if (rotate) e.Graphics.RotateTransform(-90);
             e.Graphics.FillRectangle(SkinManager.BackdropBrush, 0, 0, velikost.Width + 2, velikost.Height + 2);
-            e.Graphics.DrawString(Text, Font, SkinManager.ColorScheme.TextBrush, 1, 1);
+            e.Graphics.DrawString(Text, Font, SkinManager.ColorScheme.AccentBrush, 1, 1);
 
             e.Graphics.ResetTransform();
         }
