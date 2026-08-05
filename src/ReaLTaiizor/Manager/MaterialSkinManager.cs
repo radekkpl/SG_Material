@@ -97,6 +97,7 @@ namespace ReaLTaiizor.Manager
         public int FORM_PADDING = 14;
 
         private readonly object _fontLock = new(); // To avoid cross-thread unexpected behaviour.
+        private readonly object _fontCacheLock = new();
 
         // Constructor
         private MaterialSkinManager()
@@ -179,6 +180,11 @@ namespace ReaLTaiizor.Manager
             {
                 MaterialNativeTextRenderer.DeleteObject(handle);
             }
+
+            foreach (Font font in _fonts.Values)
+                font.Dispose();
+
+            _fonts.Clear();
         }
 
         // Themes
@@ -384,7 +390,7 @@ namespace ReaLTaiizor.Manager
         {
             return GetFontByType(type, 1);
         }
-
+        private readonly Dictionary<string, Font> _fonts = new Dictionary<string, Font>();
         public Font GetFontByType(FontType type, float scaleRatio)
         {
             return type switch
